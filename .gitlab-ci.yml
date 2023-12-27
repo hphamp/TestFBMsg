@@ -1,0 +1,20 @@
+stages:
+  - deploy
+
+variables:
+
+deploy:
+  tags:
+    - be .net
+  stage: deploy
+  script:
+    - docker stop Fe_H || true && docker rm Fe_H || true
+    - docker image rm fe_h || true
+    - docker build -t fe_h .
+    - docker run -dt -p 5011:80 --rm --name Fe_H fe_h
+    - docker logs Fe_H
+  only:
+    - main
+    - develop
+    - /^release\/.*/
+    - /^hotfix\/.*/
